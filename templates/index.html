@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+    <h1 class="text-2xl font-black text-blue-600 tracking-tighter italic uppercase">SeatCycle</h1>
+    <div class="flex gap-6 items-center">
+        <div class="text-right">
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Available Credits</p>
+            <p class="font-mono font-bold text-slate-800">${{ user_credits }}</p>
+        </div>
+        <div class="w-10 h-10 bg-slate-200 rounded-full border border-slate-300"></div>
+    </div>
+</nav>
+
+<header class="bg-blue-600 p-10 text-white">
+    <div class="max-w-5xl mx-auto">
+        <h2 class="text-2xl font-bold mb-4">Search Results: {{ origin }} to {{ destination }}</h2>
+        <div class="bg-white rounded-lg p-2 shadow-lg flex gap-2">
+            <input type="text" value="{{ origin }}" class="flex-1 p-3 text-slate-800 outline-none rounded">
+            <input type="text" value="{{ destination }}" class="flex-1 p-3 text-slate-800 outline-none rounded">
+            <button class="bg-blue-600 px-8 rounded font-bold hover:bg-blue-700 transition">Search</button>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto py-8 px-4">
+    {% for flight in results %}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6 overflow-hidden">
+        <div class="p-6 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <div class="font-black text-slate-300 text-xl italic uppercase">{{ flight.airline_code }}</div>
+                <div>
+                    <p class="font-bold text-lg">{{ flight.departure_time }} — {{ flight.arrival_time }}</p>
+                    <p class="text-slate-500 text-sm">{{ flight.duration }} • Non-stop</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-3xl font-black">${{ flight.price }}</p>
+                <button class="text-blue-600 font-bold text-sm hover:underline mt-1">Select →</button>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border-t border-blue-100 p-4">
+            <button onclick="toggleDropdown('refill-{{ loop.index }}')" class="flex items-center justify-between w-full group">
+                <span class="text-blue-800 font-bold text-sm"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Pay $0.00 today by booking a Refill Flight instead</span>
+                <i id="arrow-{{ loop.index }}" class="fa-solid fa-chevron-down text-blue-400 transition-transform"></i>
+            </button>
+            
+            <div id="refill-{{ loop.index }}" class="hidden mt-4 space-y-2 animate-fade-in">
+                {% for refill in flight.refill_options %}
+                <div onclick="window.location.href='/flight/{{ refill.id }}'" class="bg-white p-4 rounded-lg border border-blue-200 flex justify-between items-center hover:border-blue-500 transition cursor-pointer">
+                    <div>
+                        <p class="font-bold">{{ refill.route }}</p>
+                        <p class="text-xs text-slate-500 italic">{{ refill.timing }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-black text-green-600">${{ refill.price }}</p>
+                        <p class="text-[10px] font-bold text-blue-500 uppercase">+ ${{ refill.credit }} CREDIT</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</main>
+
+<script>
+    function toggleDropdown(id) {
+        document.getElementById(id).classList.toggle('hidden');
+        document.getElementById('arrow-' + id.split('-')[1]).classList.toggle('rotate-180');
+    }
+</script>
+{% endblock %}
