@@ -6,7 +6,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-# Gemini configuration
+# Gemini API configuration
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-flash-lite-latest')
@@ -88,10 +88,7 @@ def generate_mock_flights(origin, destination, dep_date):
 
 
 def get_gemini_analysis(flights, origin, destination, dep_date, ret_date):
-    """
-    Analyzes flights using Gemini and returns recommendation text.
-    Returns None if analysis fails.
-    """
+    # Analyzes flights using Gemini
     try:
         prompt = f"""You are a flight booking analyst for SeatCycle, a service that helps travelers find the best flight deals based on credit opportunities.
 
@@ -127,7 +124,6 @@ Be specific about which flight number and which refill option you recommend, and
 
 @app.route('/flight/<int:flight_id>')
 def flight_page(flight_id):
-    # Get the price from the URL (?price=123), default to 150 if not found
     price_from_url = request.args.get('price', 150)
     
     return render_template('flight.html', 
@@ -140,7 +136,6 @@ def ask_ai():
     seat = data.get('seat')
     cost = data.get('cost')
     
-    # Optional: Use Gemini to analyze the specific seat value
     try:
         prompt = f"The user is looking at seat {seat} which costs ${cost}. Give a 1-sentence witty travel tip about this seat choice."
         response = model.generate_content(prompt)
