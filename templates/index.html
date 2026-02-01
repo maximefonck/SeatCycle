@@ -14,11 +14,25 @@
 <header class="bg-blue-600 p-10 text-white">
     <div class="max-w-5xl mx-auto">
         <h2 class="text-2xl font-bold mb-4">Search Results: {{ origin }} to {{ destination }}</h2>
-        <div class="bg-white rounded-lg p-2 shadow-lg flex gap-2">
-            <input type="text" value="{{ origin }}" class="flex-1 p-3 text-slate-800 outline-none rounded">
-            <input type="text" value="{{ destination }}" class="flex-1 p-3 text-slate-800 outline-none rounded">
-            <button class="bg-blue-600 px-8 rounded font-bold hover:bg-blue-700 transition">Search</button>
-        </div>
+        <p class="mb-2 text-blue-100 text-sm">Travel Dates: {{ dep_date }} — {{ ret_date }}</p>
+        
+        <form action="/" method="POST" class="bg-white rounded-lg p-2 shadow-lg flex flex-wrap gap-2">
+            <input type="text" name="origin_input" value="{{ origin }}" 
+                   class="flex-[2] min-w-[150px] p-3 text-slate-800 border rounded" placeholder="From">
+            
+            <input type="text" name="destination_input" value="{{ destination }}" 
+                   class="flex-[2] min-w-[150px] p-3 text-slate-800 border rounded" placeholder="To">
+            
+            <input type="date" name="dep_date_input" value="{{ dep_date }}" 
+                   class="flex-1 min-w-[130px] p-3 text-slate-800 border rounded">
+            
+            <input type="date" name="ret_date_input" value="{{ ret_date }}" 
+                   class="flex-1 min-w-[130px] p-3 text-slate-800 border rounded">
+            
+            <button type="submit" class="bg-blue-600 px-8 rounded font-bold hover:bg-blue-700 transition">
+                Search
+            </button>
+        </form>
     </div>
 </header>
 

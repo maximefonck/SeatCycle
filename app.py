@@ -1,10 +1,25 @@
 from flask import Flask, render_template, request, jsonify
+from datetime import date
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    # Example data structure - You can populate this from an API or Logic
+    # Set default values (Today and Tomorrow)
+    origin = "Detroit (DTW)"
+    destination = "Orlando (MCO)"
+    dep_date = date.today().strftime('%Y-%m-%d')
+    ret_date = date.today().strftime('%Y-%m-%d')
+    
+    if request.method == 'POST':
+        # Capture the text inputs
+        origin = request.form.get('origin_input', origin)
+        destination = request.form.get('destination_input', destination)
+        
+        # Capture the date inputs
+        dep_date = request.form.get('dep_date_input', dep_date)
+        ret_date = request.form.get('ret_date_input', ret_date)
+
     mock_results = [
         {
             "airline_code": "DL",
@@ -13,29 +28,15 @@ def index():
             "duration": "2h 45m",
             "price": 420,
             "refill_options": [
-                {"id": 1, "route": "DTW → ORD", "timing": "Departs 4:30 PM Today", "price": 150, "credit": 187.50},
-                {"id": 2, "route": "DTW → JFK", "timing": "Departs 6:15 PM Today", "price": 200, "credit": 250.00}
+                {"id": 1, "route": f"{origin} → ORD", "timing": f"Departs {dep_date}", "price": 150, "credit": 187.50}
             ]
         }
     ]
+    
     return render_template('index.html', 
-                           origin="Detroit (DTW)", 
-                           destination="Orlando (MCO)", 
+                           origin=origin, 
+                           destination=destination,
+                           dep_date=dep_date,
+                           ret_date=ret_date,
                            user_credits="1,250.00",
                            results=mock_results)
-
-@app.route('/flight/<int:flight_id>')
-def flight_page(flight_id):
-    return render_template('flight.html', 
-                           rows=range(1, 11), 
-                           cols=['A', 'B', 'C', 'D'], 
-                           seat_price=150)
-
-@app.route('/ask_ai', methods=['POST'])
-def ask_ai():
-    data = request.json
-    # Logic for Gemini would go here
-    return jsonify({"answer": f"Seat {data['seat']} provides optimal value. You are saving 25% today."})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
