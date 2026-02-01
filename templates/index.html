@@ -32,6 +32,20 @@
 </header>
 
 <main class="max-w-5xl mx-auto py-8 px-4">
+    {% if results %}
+    <div id="ai-suggestion-container" class="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">AI Insight</span>
+            <h3 class="font-bold text-blue-900 text-sm italic">SeatCycle Gemini Analyst</h3>
+        </div>
+        {% if ai_recommendation %}
+        <p class="text-slate-800 text-sm font-medium leading-relaxed">{{ ai_recommendation }}</p>
+        {% else %}
+        <p class="text-slate-500 text-sm italic">Unable to generate AI analysis at this time.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
     {% for flight in results %}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6 overflow-hidden">
         <div class="p-6 flex justify-between items-center">
@@ -73,9 +87,13 @@
 </main>
 
 <script>
+    // Your existing toggle function
     function toggleDropdown(id) {
-        document.getElementById(id).classList.toggle('hidden');
-        document.getElementById('arrow-' + id.split('-')[1]).classList.toggle('rotate-180');
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden');
+        const arrow = document.getElementById('arrow-' + id.split('-')[1]);
+        if (arrow) arrow.classList.toggle('rotate-180');
     }
+
 </script>
 {% endblock %}
